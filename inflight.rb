@@ -1,21 +1,36 @@
+# frozen_string_literal: true
+
 require 'benchmark'
 require 'benchmark/memory'
 require 'set'
 
-def can_two_movies_fill_flight?(movie_lengths, flight_length)
+# You've built an inflight entertainment system with on-demand movie streaming.
 
+# Users on longer flights like to start a second movie right when their first one ends, but they complain that the plane
+# usually lands before they can see the ending. So you're building a feature for choosing two movies whose total runtimes
+#  will equal the exact flight length.
+
+# Write a method that takes an integer flight_length (in minutes) and an array of integers movie_lengths (in minutes)
+# and returns a boolean indicating whether there are two numbers in movie_lengths whose sum equals flight_length.
+
+# When building your method:
+
+#     Assume your users will watch exactly two movies
+#     Don't make your users watch the same movie twice
+#     Optimize for runtime over memory
+
+def can_two_movies_fill_flight?(movie_lengths, flight_length)
   # Determine if two movie runtimes add up to the flight length.
-  
+
   # Brute force method, double looop through movie_lengths to see if
   # any combination of two items equals flight_length. O(n^3) because
   # we have to go through movie_lengths twice to determine
-   
+
   # movie_lengths.each_with_index do |movie, i|
   #   movie_lengths[i+1..].each do |second_movie|
   #     return true if movie + second_movie == flight_length
   #   end
-  # end  
-   
+  # end
 
   # my solution using a hash to achieve O(n) time. I think this costs slightly
   # more in space beacuse I'm storing a value, where as using a set stores
@@ -28,7 +43,7 @@ def can_two_movies_fill_flight?(movie_lengths, flight_length)
     remaining_length = flight_length - movie
 
     if remaining_length == movie
-      # if remaining lenght == movie aka half the flight 
+      # if remaining lenght == movie aka half the flight
       # make sure we have 2 movies of the same time
       return true if movie_map[remaining_length] > 1
     elsif movie_map[remaining_length]
@@ -41,12 +56,10 @@ end
 
 # interview_cake solution for comparison
 def can_two_movies_fill_flight_set?(movie_lengths, flight_length)
-
   # Movie lengths we've seen so far.
   movie_lengths_seen = Set.new
 
   movie_lengths.any? do |first_movie_length|
-
     matching_second_movie_length = flight_length - first_movie_length
 
     if movie_lengths_seen.include?(matching_second_movie_length)
@@ -147,8 +160,8 @@ end
 # does not appear to be the case since both are using direct access, multiple
 # runs are all very close to each other
 Benchmark.bmbm do |x|
-  x.report("Hash") { run_tests }
-  x.report("Set")  { run_tests_set }
+  x.report('Hash') { run_tests }
+  x.report('Set')  { run_tests_set }
 end
 
 # Rehearsal ----------------------------------------
@@ -161,8 +174,8 @@ end
 # Set    0.000025   0.000000   0.000025 (  0.000022)
 
 Benchmark.memory do |x|
-  x.report("Hash") { run_tests }
-  x.report("Set")  { run_tests_set }
+  x.report('Hash') { run_tests }
+  x.report('Set')  { run_tests_set }
 end
 
 # There does seem to be a difference in space usage though
