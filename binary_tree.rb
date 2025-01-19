@@ -25,4 +25,8 @@ class BinaryTreeNode
 
     false
   end
+
+  def leaf?
+    @left.nil? && @right.nil?
+  end
 end
